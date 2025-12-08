@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FontDetect AI</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- CSS Eksternal -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 FontDetect AI</h1>
+    <p class="subtitle">Unggah gambar teks, dan temukan font-nya dalam sekejap!</p>
+
+    <!-- UPLOAD AREA -->
+    <div class="upload-area" id="upload-area">
+      <div class="upload-icon">
+        <i class="fas fa-cloud-upload-alt"></i>
+      </div>
+      <p class="upload-text">Klik atau seret gambar ke sini</p>
+      <input type="file" id="file-input" accept="image/*" />
+    </div>
+
+    <!-- PREVIEW GAMBAR -->
+    <img id="preview" alt="Preview Gambar" />
+
+    <!-- LOADING -->
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      Sedang menganalisis font...
+    </div>
+
+    <!-- RESULT AREA -->
+    <div id="result-area">
+      <h2><i class="fas fa-font"></i> Font Terdeteksi</h2>
+      <div id="font-name">Helvetica</div>
+      <div id="sample-text">The quick brown fox jumps over the lazy dog</div>
+      <div id="confidence">
+        <i class="fas fa-chart-line"></i> Akurasi: 94.2%
+      </div>
+      <button class="btn btn-reset" id="reset-btn">Deteksi Gambar Lain</button>
+    </div>
+  </div>
+
+  <!-- JavaScript Eksternal -->
+  <script src="script.js"></script>
+</body>
+</html>
