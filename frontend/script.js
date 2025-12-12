@@ -17,7 +17,7 @@ const resetBtn = document.getElementById('reset-btn');
 const API_BASE_URL =
   window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:5000'
-    : 'https://YOUR-RAILWAY-APP.up.railway.app';
+    : 'https://font-detector-production.up.railway.app';
 
 // Klik area upload
 uploadArea.addEventListener('click', () => fileInput.click());

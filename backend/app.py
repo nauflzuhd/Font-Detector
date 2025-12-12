@@ -15,7 +15,23 @@ DATASET_PATH = os.path.join(BASE_DIR, "dataset_font_variatif")  # opsional, jika
 IMG_SIZE = (200, 200)
 
 app = Flask(__name__)
-CORS(app)
+
+# Konfigurasi CORS: izinkan hanya origin tertentu
+# - Untuk development: beberapa localhost
+# - Untuk production: set env FRONTEND_ORIGIN (bisa multi, dipisah koma)
+frontend_origin_env = os.environ.get("FRONTEND_ORIGIN")
+if frontend_origin_env:
+    allowed_origins = [o.strip() for o in frontend_origin_env.split(",") if o.strip()]
+else:
+    allowed_origins = [
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://localhost:5000",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:5173",
+    ]
+
+CORS(app, resources={r"/api/*": {"origins": allowed_origins}})
 
 # ================= 1. LOAD MODEL =================
 print("Memuat Model Final...")

@@ -1,5 +1,5 @@
 flask
 flask-cors
 tensorflow
-opencv-python
+opencv-python-headless
 gunicorn
