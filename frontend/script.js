@@ -3,15 +3,21 @@ const fileInput = document.getElementById('file-input');
 const preview = document.getElementById('preview');
 const resultDiv = document.getElementById('result-area');
 const fontName = document.getElementById('font-name');
-const sampleText = document.getElementById('sample-text');
 const confidence = document.getElementById('confidence');
 const allProbsDiv = document.getElementById('all-probs');
+const originalView = document.getElementById('original-view');
+const normalizedView = document.getElementById('normalized-view');
 
 const loading = document.getElementById('loading');
 const resetBtn = document.getElementById('reset-btn');
 
 // Konfigurasi API backend Flask
-const API_BASE_URL = 'http://localhost:5000';
+// Saat development: localhost
+// Saat production (Vercel): ganti base URL ke backend Railway
+const API_BASE_URL =
+  window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:5000'
+    : 'https://font-detector-production.up.railway.app';
 
 // Klik area upload
 uploadArea.addEventListener('click', () => fileInput.click());
@@ -52,6 +58,8 @@ resetBtn.addEventListener('click', () => {
   resultDiv.style.display = 'none';
   uploadArea.style.display = 'block';
   if (allProbsDiv) allProbsDiv.innerHTML = '';
+  if (originalView) originalView.src = '';
+  if (normalizedView) normalizedView.src = '';
   fileInput.value = '';
 });
 
@@ -65,7 +73,13 @@ function processFile(file) {
   reader.onload = (e) => {
     preview.src = e.target.result;
     preview.style.display = 'block';
+
+    // Simpan juga ke tampilan "Gambar Asli" di hasil
+    if (originalView) {
+      originalView.src = e.target.result;
+    }
   };
+
   reader.readAsDataURL(file);
 
   sendToBackend(file);
@@ -106,9 +120,13 @@ async function sendToBackend(file) {
     const conf = (result.confidence || 0) * 100;
 
     fontName.textContent = label;
-    sampleText.textContent = 'The quick brown fox jumps over the lazy dog';
-    sampleText.style.fontFamily = `"${label}", sans-serif`;
+
     confidence.innerHTML = `<i class="fas fa-chart-line"></i> Akurasi: ${conf.toFixed(1)}%`;
+
+    // Tampilkan gambar hasil preprocessing (normalized)
+    if (normalizedView && result.normalized_image) {
+      normalizedView.src = `data:image/png;base64,${result.normalized_image}`;
+    }
 
     // Tampilkan semua probabilitas font
     if (allProbsDiv && Array.isArray(result.all_probs)) {
