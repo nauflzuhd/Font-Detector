@@ -5,6 +5,8 @@ const resultDiv = document.getElementById('result-area');
 const fontName = document.getElementById('font-name');
 const sampleText = document.getElementById('sample-text');
 const confidence = document.getElementById('confidence');
+const allProbsDiv = document.getElementById('all-probs');
+
 const loading = document.getElementById('loading');
 const resetBtn = document.getElementById('reset-btn');
 
@@ -49,6 +51,7 @@ resetBtn.addEventListener('click', () => {
   preview.style.display = 'none';
   resultDiv.style.display = 'none';
   uploadArea.style.display = 'block';
+  if (allProbsDiv) allProbsDiv.innerHTML = '';
   fileInput.value = '';
 });
 
@@ -81,15 +84,21 @@ async function sendToBackend(file) {
       method: 'POST',
       body: formData
     });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    
+    let data;
+    try {
+      data = await response.json();
+    } catch (e) {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      throw e;
     }
 
-    const data = await response.json();
-
-    if (!data.success) {
-      throw new Error(data.error || 'Prediksi gagal');
+    if (!response.ok || !data.success) {
+      const backendError = data && data.error ? data.error : null;
+      const message = backendError || `HTTP error! status: ${response.status}`;
+      throw new Error(message);
     }
 
     const result = data.result;
@@ -100,6 +109,22 @@ async function sendToBackend(file) {
     sampleText.textContent = 'The quick brown fox jumps over the lazy dog';
     sampleText.style.fontFamily = `"${label}", sans-serif`;
     confidence.innerHTML = `<i class="fas fa-chart-line"></i> Akurasi: ${conf.toFixed(1)}%`;
+
+    // Tampilkan semua probabilitas font
+    if (allProbsDiv && Array.isArray(result.all_probs)) {
+      const rows = result.all_probs
+        .sort((a, b) => b.probability - a.probability)
+        .map(item => {
+          const p = (item.probability * 100).toFixed(1);
+          return `<li><span class="font-label">${item.label}</span><span class="font-prob">${p}%</span></li>`;
+        })
+        .join('');
+
+      allProbsDiv.innerHTML = `
+        <h3><i class="fas fa-list"></i> Akurasi Semua Font</h3>
+        <ul class="prob-list">${rows}</ul>
+      `;
+    }
 
     resultDiv.style.display = 'block';
   } catch (err) {

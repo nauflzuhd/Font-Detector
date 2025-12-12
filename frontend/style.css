@@ -193,6 +193,57 @@ h1 {
   gap: 6px;
 }
 
+/* Daftar akurasi semua font */
+#all-probs {
+  margin-top: 18px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(230, 57, 70, 0.3);
+}
+
+#all-probs h3 {
+  font-size: 1rem;
+  color: #c1121f;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.prob-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.prob-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(255, 240, 240, 0.9);
+  font-size: 0.95rem;
+}
+
+.prob-list li:first-child {
+  background: rgba(230, 57, 70, 0.06);
+  font-weight: 600;
+}
+
+.font-label {
+  color: #444;
+  text-transform: lowercase;
+}
+
+.font-prob {
+  color: #d90429;
+  font-weight: 600;
+}
+
 .btn {
   background: linear-gradient(135deg, #e63946, #d90429);
   color: white;

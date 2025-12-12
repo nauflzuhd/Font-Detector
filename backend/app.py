@@ -22,7 +22,9 @@ model = None
 class_names = []
 
 try:
-    model = load_model(MODEL_PATH)
+    # safe_mode=False diperlukan untuk model yang memiliki Lambda layer
+    # Pastikan Anda hanya menggunakannya untuk model yang Anda percayai.
+    model = load_model(MODEL_PATH, safe_mode=False)
     print("✅ Model berhasil dimuat dari", MODEL_PATH)
 except Exception as e:
     print(f"ERROR load model: {e}")
@@ -106,7 +108,8 @@ def predict_font(image_path):
     if processed_img is None:
         raise ValueError("Gagal membaca gambar")
 
-    # Model biasanya expect 3 channel, pastikan shape sesuai
+    # Model Anda ternyata mengharapkan input grayscale (channel terakhir = 1).
+    # Jadi cukup tambahkan dimensi channel, bukan dikonversi ke RGB.
     if len(processed_img.shape) == 2:
         processed_img_expanded = np.expand_dims(processed_img, axis=-1)
     else:
@@ -130,10 +133,20 @@ def predict_font(image_path):
         for i in top_indices
     ]
 
+    # Semua probabilitas kelas
+    all_probs = [
+        {
+            "label": class_names[i] if 0 <= i < len(class_names) else str(i),
+            "probability": float(predictions[i])
+        }
+        for i in range(len(predictions))
+    ]
+
     return {
         "label": label,
         "confidence": confidence,
         "top3": top3,
+        "all_probs": all_probs,
     }
 
 
