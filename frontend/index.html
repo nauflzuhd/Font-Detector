@@ -34,13 +34,25 @@
 
     <!-- RESULT AREA -->
     <div id="result-area">
-      <h2><i class="fas fa-font"></i> Font Terdeteksi</h2>
+      <h2>Font Terdeteksi</h2>
       <div id="font-name">Helvetica</div>
-      <div id="sample-text">The quick brown fox jumps over the lazy dog</div>
+
       <div id="confidence">
         <i class="fas fa-chart-line"></i> Akurasi: 94.2%
       </div>
       <div id="all-probs"></div>
+
+      <div class="comparison-wrapper">
+        <div class="comparison-block">
+          <h3>Gambar Asli</h3>
+          <img id="original-view" alt="Gambar Asli" />
+        </div>
+        <div class="comparison-block">
+          <h3>Gambar yang dilihat AI</h3>
+          <img id="normalized-view" alt="Input AI" />
+        </div>
+      </div>
+
       <button class="btn btn-reset" id="reset-btn">Deteksi Gambar Lain</button>
     </div>
   </div>

@@ -6,6 +6,7 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 import cv2
 import os
+import base64
 
 # ================= KONFIGURASI =================
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -142,11 +143,19 @@ def predict_font(image_path):
         for i in range(len(predictions))
     ]
 
+    # Encode gambar normalized sebagai PNG base64 untuk ditampilkan di frontend
+    try:
+        _, buf = cv2.imencode('.png', processed_img)
+        normalized_b64 = base64.b64encode(buf).decode('utf-8')
+    except Exception:
+        normalized_b64 = None
+
     return {
         "label": label,
         "confidence": confidence,
         "top3": top3,
         "all_probs": all_probs,
+        "normalized_image": normalized_b64,
     }
 
 
@@ -192,4 +201,5 @@ def health_check():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)
